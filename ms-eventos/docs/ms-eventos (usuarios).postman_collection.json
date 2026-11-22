@@ -1,0 +1,875 @@
+{
+  "info": {
+    "_postman_id": "8e774d16-0194-4f3a-a32f-fd8f65cdbb16",
+    "name": "ms-eventos (usuarios)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48922102"
+  },
+  "item": [
+    {
+      "name": "Autenticación",
+      "item": [
+        {
+          "name": "Login administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login administrador devuelve 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nif (pm.response.code === 200) {\r\n    pm.environment.set(\"tokenAdmin\", pm.response.json().token);\r\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"admin@empresa.com\",\r\n  \"password\": \"Admin2026*\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{loginUrl}}",
+              "host": [
+                "{{loginUrl}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login admisiones",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login Admisiones devuelve 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nif (pm.response.code === 200) {\r\n    pm.environment.set(\"tokenAdmisiones\", pm.response.json().token);\r\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"admisiones.eventos@empresa.com\",\r\n  \"password\": \"Admisiones2026*\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{loginUrl}}",
+              "host": [
+                "{{loginUrl}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuario de admisiones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmisiones}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Admisiones Pruebas\",\r\n  \"email\": \"admisiones.eventos@empresa.com\",\r\n  \"password\": \"Admisiones2026*\",\r\n  \"rol\": \"admisiones\",\r\n  \"activo\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3001/usuarios",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3001",
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Consultas GET",
+      "item": [
+        {
+          "name": "Listar eventos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"GET Eventos devuelve 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Evento específico",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eventos?tipo=taller",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "taller"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Evento inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Evento inexistente devuelve 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/2026",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "2026"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ID no numérico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"ID no numérico devuelve 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/iddelcoleguita",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "iddelcoleguita"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Evento por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Consultar evento por ID devuelve 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Creación de eventos",
+      "item": [
+        {
+          "name": "Crear evento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Crear evento devuelve 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\nif (pm.response.code === 201) {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.environment.set(\"eventoId\", respuesta.id);\r\n\r\n    console.log(\"ID creado:\", respuesta.id);\r\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"{{codigoPrueba}}\",\r\n  \"nombre\": \"Evento ficticio de prueba\",\r\n  \"fecha\": \"2026-12-20\",\r\n  \"asistentes_esperados\": 50,\r\n  \"tipo\": \"taller\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Asistentes inválidos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Rechaza asistentes inválidos con HTTP 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"EVT-ERROR-400\",\r\n  \"nombre\": \"Evento de validación\",\r\n  \"fecha\": \"2026-12-20\",\r\n  \"asistentes_esperados\": 0,\r\n  \"tipo\": \"taller\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tipo inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Tipo inválido devuelve 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"EVT-TIPO-INVALIDO\",\r\n  \"nombre\": \"Evento de prueba\",\r\n  \"fecha\": \"2026-12-20\",\r\n  \"asistentes_esperados\": 50,\r\n  \"tipo\": \"deportivo\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Código duplicado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Código duplicado devuelve 409\", function () {\r\n    pm.response.to.have.status(409);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"EVT-001\",\r\n  \"nombre\": \"Evento duplicado de prueba\",\r\n  \"fecha\": \"2026-12-20\",\r\n  \"asistentes_esperados\": 50,\r\n  \"tipo\": \"feria\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Nombre obligatorio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Nombre ausente devuelve 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"EVT-SIN-NOMBRE\",\r\n  \"fecha\": \"2026-12-20\",\r\n  \"asistentes_esperados\": 50,\r\n  \"tipo\": \"taller\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Actualización de eventos",
+      "item": [
+        {
+          "name": "Actualizar evento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Actualizar evento devuelve 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"{{codigoPrueba}}\",\r\n  \"nombre\": \"Evento actualizado por Postman\",\r\n  \"fecha\": \"2026-12-21\",\r\n  \"asistentes_esperados\": 75,\r\n  \"tipo\": \"conferencia\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/eventos/{{eventoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "{{eventoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar evento inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Actualizar evento inexistente devuelve 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"EVT-NO-EXISTE-2029\",\r\n  \"nombre\": \"Evento inexistente\",\r\n  \"fecha\": \"2026-12-20\",\r\n  \"asistentes_esperados\": 80,\r\n  \"tipo\": \"conferencia\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/eventos/2029",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "2029"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Asistentes inválidos, actualización",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"PUT con asistentes inválidos devuelve 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"{{codigoPrueba}}\",\r\n  \"nombre\": \"Evento con datos inválidos\",\r\n  \"fecha\": \"2026-12-20\",\r\n  \"asistentes_esperados\": -5,\r\n  \"tipo\": \"taller\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/eventos/{{eventoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "{{eventoId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Eliminación de eventos",
+      "item": [
+        {
+          "name": "Eliminar evento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Eliminar evento devuelve 204\", function () {\r\n    pm.response.to.have.status(204);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/{{eventoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "{{eventoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Evento inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Eliminar evento inexistente devuelve 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/2025",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "2025"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Seguridad JWT",
+      "item": [
+        {
+          "name": "Sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Sin token devuelve 401\", function () {\r\n    pm.response.to.have.status(401);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Admisiones no puede crear eventos\", function () {\r\n    pm.response.to.have.status(403);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenAdmisiones}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"EVT-403-PRUEBA\",\r\n  \"nombre\": \"Prueba de permisos\",\r\n  \"fecha\": \"2026-12-20\",\r\n  \"asistentes_esperados\": 40,\r\n  \"tipo\": \"taller\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

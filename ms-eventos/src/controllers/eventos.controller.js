@@ -1,86 +1,49 @@
+// =====================================================================
+// CAPA DE PRESENTACIÓN (controlador)
+// Lee los datos de la petición y construye las respuestas HTTP.
+// =====================================================================
 
- // =====================================================================
- // CAPA DE PRESENTACIÓN (controlador)
- // Traduce HTTP <-> servicio.
- // Lee los datos de la petición y construye las respuestas HTTP.
- // =====================================================================
-
-const service = require('../services/pacientes.service');
+const service = require('../services/eventos.service');
 const HttpError = require('../utils/http-error');
-
-// =====================================================================
-// VALIDAR ID
-// =====================================================================
 
 function leerId(req) {
   const id = Number(req.params.id);
 
-  if (!Number.isInteger(id) || id <= 0) {
+  if (!Number.isSafeInteger(id) || id <= 0) {
     throw new HttpError(400, 'El id debe ser un entero positivo');
   }
 
   return id;
 }
 
-// =====================================================================
-// LISTAR PACIENTES
-// GET /pacientes
-// GET /pacientes?eps=Sanitas
-// GET /pacientes?ids=1,3
-// =====================================================================
-
+// GET /eventos
+// GET /eventos?tipo=taller
 async function listar(req, res) {
   const filtros = {
-    eps: req.query.eps
+    tipo: req.query.tipo
   };
 
-  if (req.query.ids) {
-    filtros.ids = String(req.query.ids).split(',').map(Number);
+  const eventos = await service.listar(filtros);
 
-    if (
-      filtros.ids.some(
-        (id) => !Number.isInteger(id) || id <= 0
-      )
-    ) {
-      throw new HttpError(
-        400,
-        'ids debe ser una lista de enteros positivos separados por comas'
-      );
-    }
-  }
+  res.locals.idsEventos = eventos.map((evento) => evento.id);
 
-  const pacientes = await service.listar(filtros);
-
-  // Guardar los IDs consultados para el registro HTTP
-  res.locals.idsPacientes = pacientes.map(p => p.id);
-
-  return res.status(200).json(pacientes);
+  return res.status(200).json(eventos);
 }
 
-// =====================================================================
-// OBTENER PACIENTE POR ID
-// GET /pacientes/:id
-// =====================================================================
-
+// GET /eventos/:id
 async function obtener(req, res) {
-  const paciente = await service.obtener(leerId(req));
+  const evento = await service.obtener(leerId(req));
 
-  // Guardar el ID consultado
-  res.locals.idsPacientes = [paciente.id];
+  res.locals.idsEventos = [evento.id];
 
-  return res.status(200).json(paciente);
+  return res.status(200).json(evento);
 }
 
-// =====================================================================
-// CREAR PACIENTE
-// POST /pacientes
-// =====================================================================
-
+// POST /eventos
 async function crear(req, res) {
   const nuevo = await service.crear(req.body);
 
-  // Guardar el ID del paciente creado
-  res.locals.pacienteId = nuevo.id;
+  res.locals.eventoId = nuevo.id;
 
   return res
     .status(201)
@@ -88,53 +51,32 @@ async function crear(req, res) {
     .json(nuevo);
 }
 
-// =====================================================================
-// ACTUALIZAR PACIENTE
-// PUT /pacientes/:id
-// =====================================================================
-
+// PUT /eventos/:id
 async function actualizar(req, res) {
-  const actualizado = await service.actualizar(
-    leerId(req),
-    req.body
-  );
+  const actualizado = await service.actualizar(leerId(req), req.body);
 
-  // Guardar el ID del paciente actualizado
-  res.locals.pacienteId = actualizado.id;
+  res.locals.eventoId = actualizado.id;
 
   return res.status(200).json(actualizado);
 }
 
-// =====================================================================
-// ELIMINAR PACIENTE
-// DELETE /pacientes/:id
-// =====================================================================
-
+// DELETE /eventos/:id
 async function eliminar(req, res) {
   const id = leerId(req);
 
   await service.eliminar(id);
 
-  // Guardar el ID del paciente eliminado
-  res.locals.pacienteId = id;
+  res.locals.eventoId = id;
 
   return res.status(204).end();
 }
 
-// =====================================================================
-// MANEJAR ERRORES ASÍNCRONOS
-// Compatible con Express 4 y Express 5.
-// =====================================================================
-
+// Envía los errores asíncronos al middleware de errores de Express.
 function manejarAsync(funcion) {
   return (req, res, next) => {
     Promise.resolve(funcion(req, res, next)).catch(next);
   };
 }
-
-// =====================================================================
-// EXPORTAR CONTROLADORES
-// =====================================================================
 
 module.exports = {
   listar: manejarAsync(listar),

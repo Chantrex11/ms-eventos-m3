@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "8e774d16-0194-4f3a-a32f-fd8f65cdbb16",
-    "name": "ms-eventos (usuarios)",
+    "name": "Collection ms-eventos",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "48922102"
   },
@@ -30,7 +30,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"email\": \"admin@empresa.com\",\r\n  \"password\": \"Admin2026*\"\r\n}",
+              "raw": "{\r\n  \"email\": \"{{adminEmail}}\",\r\n  \"password\": \"{{adminPassword}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -67,7 +67,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"email\": \"admisiones.eventos@empresa.com\",\r\n  \"password\": \"Admisiones2026*\"\r\n}",
+              "raw": "{\r\n  \"email\": \"{{admisionesEmail}}\",\r\n  \"password\": \"{{admisionesPassword}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -91,7 +91,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{tokenAdmisiones}}",
+                  "value": "{{tokenAdmin}}",
                   "type": "string"
                 }
               ]
@@ -100,7 +100,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"nombre\": \"Admisiones Pruebas\",\r\n  \"email\": \"admisiones.eventos@empresa.com\",\r\n  \"password\": \"Admisiones2026*\",\r\n  \"rol\": \"admisiones\",\r\n  \"activo\": true\r\n}",
+              "raw": "{\r\n  \"nombre\": \"Usuario Admisiones\",\r\n  \"email\": \"{{admisionesEmail}}\",\r\n  \"password\": \"{{admisionesPassword}}\",\r\n  \"rol\": \"admisiones\",\r\n  \"activo\": true\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -330,7 +330,16 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Crear evento devuelve 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\nif (pm.response.code === 201) {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.environment.set(\"eventoId\", respuesta.id);\r\n\r\n    console.log(\"ID creado:\", respuesta.id);\r\n}"
+                  "pm.test(\"Crear evento devuelve 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\nif (pm.response.code === 201) {\r\n    pm.environment.set(\"eventoId\", pm.response.json().id);\r\n}"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"codigoPrueba\", \"EVT-\" + Date.now());\r\npm.environment.unset(\"eventoId\");"
                 ]
               }
             }
@@ -823,7 +832,7 @@
           "response": []
         },
         {
-          "name": "New Request",
+          "name": "Token admisiones",
           "event": [
             {
               "listen": "test",

@@ -262,7 +262,8 @@ Content-Type: application/json
   "nombre": "Encuentro de Innovacion",
   "fecha": "2026-12-22",
   "asistentes_esperados": 80,
-  "tipo": "conferencia"
+  "tipo": "conferencia",
+  "patrocinador_id": 1
 }
 ```
 
@@ -290,7 +291,8 @@ Content-Type: application/json
   "nombre": "Encuentro de Innovacion Actualizado",
   "fecha": "2026-12-22",
   "asistentes_esperados": 100,
-  "tipo": "conferencia"
+  "tipo": "conferencia",
+  "patrocinador_id": 1
 }
 ```
 
@@ -569,3 +571,7 @@ Ambos integrantes colaboran mediante commits en el mismo repositorio.
 - Validar los datos antes de acceder a la base.
 - Aplicar autorización por roles desde el backend.
 - Mantener separadas las bases de datos de los microservicios.
+
+## Tarea 1
+
+`patrocinador_id` es obligatorio, entero positivo de rango INT. Se guarda y devuelve en eventos. Ver [documentacion del atributo](ms-eventos/README.md#tarea-1-referencia-a-patrocinadores).

@@ -62,6 +62,10 @@ function validarEvento(datos) {
     errores.push('tipo debe ser uno de estos valores: conferencia, taller o feria');
   }
 
+  if (!Number.isInteger(datos.patrocinador_id) || datos.patrocinador_id <= 0 || datos.patrocinador_id > 2147483647) {
+    errores.push('patrocinador_id debe ser un entero entre 1 y 2147483647');
+  }
+
   return errores;
 }
 
@@ -72,7 +76,8 @@ function construirEvento(datos) {
     nombre: datos.nombre.trim(),
     fecha: datos.fecha,
     asistentes_esperados: datos.asistentes_esperados,
-    tipo: datos.tipo.trim()
+    tipo: datos.tipo.trim(),
+    patrocinador_id: datos.patrocinador_id
   };
 }
 

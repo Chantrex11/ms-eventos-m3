@@ -12,7 +12,8 @@ const COLUMNAS = `
   nombre,
   DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha,
   asistentes_esperados,
-  tipo
+  tipo,
+  patrocinador_id
 `;
 
 // Consultar todos los eventos, con filtro opcional por tipo.
@@ -53,14 +54,15 @@ async function findByCodigo(codigo) {
 async function create(evento) {
   const [resultado] = await pool.query(
     `INSERT INTO eventos
-     (codigo, nombre, fecha, asistentes_esperados, tipo)
-     VALUES (?, ?, ?, ?, ?)`,
+     (codigo, nombre, fecha, asistentes_esperados, tipo, patrocinador_id)
+     VALUES (?, ?, ?, ?, ?, ?)`,
     [
       evento.codigo,
       evento.nombre,
       evento.fecha,
       evento.asistentes_esperados,
-      evento.tipo
+      evento.tipo,
+      evento.patrocinador_id
     ]
   );
 
@@ -72,7 +74,7 @@ async function update(id, evento) {
   await pool.query(
     `UPDATE eventos
      SET codigo = ?, nombre = ?, fecha = ?,
-         asistentes_esperados = ?, tipo = ?
+         asistentes_esperados = ?, tipo = ?, patrocinador_id = ?
      WHERE id = ?`,
     [
       evento.codigo,
@@ -80,6 +82,7 @@ async function update(id, evento) {
       evento.fecha,
       evento.asistentes_esperados,
       evento.tipo,
+      evento.patrocinador_id,
       id
     ]
   );

@@ -23,7 +23,7 @@ async function listar(req, res) {
     tipo: req.query.tipo
   };
 
-  const eventos = await service.listar(filtros);
+  const eventos = await service.listar(filtros, req.get('Authorization'));
 
   res.locals.idsEventos = eventos.map((evento) => evento.id);
 
@@ -32,7 +32,7 @@ async function listar(req, res) {
 
 // GET /eventos/:id
 async function obtener(req, res) {
-  const evento = await service.obtener(leerId(req));
+  const evento = await service.obtener(leerId(req), req.get('Authorization'));
 
   res.locals.idsEventos = [evento.id];
 
@@ -41,7 +41,7 @@ async function obtener(req, res) {
 
 // POST /eventos
 async function crear(req, res) {
-  const nuevo = await service.crear(req.body);
+  const nuevo = await service.crear(req.body, req.get('Authorization'));
 
   res.locals.eventoId = nuevo.id;
 
@@ -53,7 +53,7 @@ async function crear(req, res) {
 
 // PUT /eventos/:id
 async function actualizar(req, res) {
-  const actualizado = await service.actualizar(leerId(req), req.body);
+  const actualizado = await service.actualizar(leerId(req), req.body, req.get('Authorization'));
 
   res.locals.eventoId = actualizado.id;
 
@@ -71,7 +71,6 @@ async function eliminar(req, res) {
   return res.status(204).end();
 }
 
-// Envía los errores asíncronos al middleware de errores de Express.
 function manejarAsync(funcion) {
   return (req, res, next) => {
     Promise.resolve(funcion(req, res, next)).catch(next);

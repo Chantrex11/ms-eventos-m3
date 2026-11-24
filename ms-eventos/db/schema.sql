@@ -11,6 +11,9 @@ CREATE TABLE IF NOT EXISTS eventos (
     fecha DATE NOT NULL,
     asistentes_esperados INT NOT NULL,
     tipo VARCHAR(20) NOT NULL,
+    patrocinador_id INT NOT NULL,
+
+    CONSTRAINT chk_patrocinador CHECK (patrocinador_id > 0),
 
     CONSTRAINT chk_asistentes
         CHECK (asistentes_esperados > 0),
@@ -20,8 +23,8 @@ CREATE TABLE IF NOT EXISTS eventos (
 );
 
 INSERT INTO eventos
-(codigo, nombre, fecha, asistentes_esperados, tipo)
+(codigo, nombre, fecha, asistentes_esperados, tipo, patrocinador_id)
 VALUES
-('EVT-001', 'Conferencia de Tecnologia', '2026-12-10', 120, 'conferencia'),
-('EVT-002', 'Taller de Programacion', '2026-12-15', 35, 'taller'),
-('EVT-003', 'Feria de Innovacion', '2026-12-20', 200, 'feria');
+('EVT-001', 'Conferencia de Tecnologia', '2026-12-10', 120, 'conferencia', 1),
+('EVT-002', 'Taller de Programacion', '2026-12-15', 35, 'taller', 2),
+('EVT-003', 'Feria de Innovacion', '2026-12-20', 200, 'feria', 4);
